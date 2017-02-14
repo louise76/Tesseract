@@ -13,7 +13,7 @@ interface Info{
 	/**
 	 * Actual Minecraft: PE protocol version
 	 */
-	const CURRENT_PROTOCOL = 102; //Need to confirm this
+	const CURRENT_PROTOCOL = 101; //This'll change later
 	const MINECRAFT_VERSION = "v1.0.4.0";
 	const MINECRAFT_VERSION_NETWORK = "1.0.4.0";
 
