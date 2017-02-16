@@ -3584,33 +3584,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 		return false;
 	}
-	
-	/**
-	* @param $action
-	* @return bool
-	*/
-	public function sendActionBar($action, $win = false){
-		$ev = new PlayerTextPreSendEvent($this, $message, PlayerTextPreSendEvent::ActionBar);
-		$this->server->getPluginManager()->callEvent($ev);
-		if(!$ev->isCancelled()){
-			$pk = new TextPacket();
-			$pk->type = TextPacket::TYPE_TIP;
-			$action = $ev->getMessage();
-			
-			if($win == true){
-			$pk->message = "$action"."\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-			$this->dataPacket($pk);
-			return true;
-			}
-			if($win == null or false){
-			$pk->message = "$action"."\n\n\n\n\n\n";
-			$this->dataPacket($pk);
-			return true;
-					
-				}
-		}
-		return false;
-	}
 
 	/**
 	 * Note for plugin developers: use kick() with the isAdmin
@@ -3656,8 +3629,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				unset($this->usedChunks[$index]);
 			}
 
-			parent::close();
-
 			$this->interface->close($this, $notify ? $reason : "");
 
 			if($this->loggedIn){
@@ -3669,11 +3640,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				if($this->loggedIn === true and $ev->getAutoSave()){
 					$this->save();
 				}
+				
 				if($this->spawned !== false and $ev->getQuitMessage() != ""){
 					$this->server->broadcastMessage($ev->getQuitMessage());
 				}
 			}
-      
+			
+			parent::close();
+			
 			$this->loggedIn = false;
 			$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_USERS, $this);
 			$this->spawned = false;
