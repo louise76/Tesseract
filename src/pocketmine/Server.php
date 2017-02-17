@@ -2189,7 +2189,6 @@ class Server
                 return count($recipients);
             }
         }
-    }
 
         /**
          * Broadcasts a list of packets in a batch to a list of players
@@ -2198,8 +2197,7 @@ class Server
          * @param DataPacket[]|string $packets
          * @param bool $forceSync
          */
-        public function batchPackets(array $players, array $packets, $forceSync = false)
-        {
+        public function batchPackets(array $players, array $packets, $forceSync = false){
             Timings::$playerNetworkTimer->startTiming();
             $str = "";
 
