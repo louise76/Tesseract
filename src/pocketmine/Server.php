@@ -2198,8 +2198,7 @@ class Server
          * @param DataPacket[]|string $packets
          * @param bool $forceSync
          */
-        public
-        function batchPackets(array $players, array $packets, $forceSync = false)
+        public function batchPackets(array $players, array $packets, $forceSync = false)
         {
             Timings::$playerNetworkTimer->startTiming();
             $str = "";
@@ -2232,8 +2231,7 @@ class Server
             Timings::$playerNetworkTimer->stopTiming();
         }
 
-        public
-        function broadcastPacketsCallback($data, array $identifiers)
+        public function broadcastPacketsCallback($data, array $identifiers)
         {
             $pk = new BatchPacket();
             $pk->payload = $data;
@@ -2251,8 +2249,7 @@ class Server
         /**
          * @param int $type
          */
-        public
-        function enablePlugins(int $type)
+        public function enablePlugins(int $type)
         {
             foreach ($this->pluginManager->getPlugins() as $plugin) {
                 if (!$plugin->isEnabled() and $plugin->getDescription()->getOrder() === $type) {
@@ -2269,20 +2266,17 @@ class Server
         /**
          * @param Plugin $plugin
          */
-        public
-        function enablePlugin(Plugin $plugin)
+        public function enablePlugin(Plugin $plugin)
         {
             $this->pluginManager->enablePlugin($plugin);
         }
 
-        public
-        function disablePlugins()
+        public function disablePlugins()
         {
             $this->pluginManager->disablePlugins();
         }
 
-        public
-        function checkConsole()
+        public function checkConsole()
         {
             Timings::$serverCommandTimer->startTiming();
             if (($line = $this->console->getLine()) !== null) {
@@ -2303,8 +2297,7 @@ class Server
          * @return bool
          *
          */
-        public
-        function dispatchCommand(CommandSender $sender, $commandLine)
+        public function dispatchCommand(CommandSender $sender, $commandLine)
         {
             if ($this->commandMap->dispatch($sender, $commandLine)) {
                 return true;
@@ -2316,8 +2309,7 @@ class Server
             return false;
         }
 
-        public
-        function reload()
+        public function reload()
         {
             $this->logger->info("Saving levels...");
 
@@ -2365,8 +2357,7 @@ class Server
          * @param bool $restart
          * @param string $msg
          */
-        public
-        function shutdown(bool $restart = false, string $msg = "")
+        public function shutdown(bool $restart = false, string $msg = "")
         {
             /*if($this->isRunning){
                 $killer = new ServerKiller(90);
@@ -2383,8 +2374,7 @@ class Server
             }
         }
 
-        public
-        function forceShutdown()
+        public function forceShutdown()
         {
             if ($this->hasStopped) {
                 return;
@@ -2450,8 +2440,7 @@ class Server
 
         }
 
-        public
-        function getQueryInformation()
+        public function getQueryInformation()
         {
             return $this->queryRegenerateTask;
         }
@@ -2459,8 +2448,7 @@ class Server
         /**
          * Starts the PocketMine-MP server and starts processing ticks and packets
          */
-        public
-        function start()
+        public function start()
         {
             if ($this->getConfigBoolean("enable-query", true) === true) {
                 $this->queryHandler = new QueryHandler();
@@ -2500,16 +2488,14 @@ class Server
             gc_collect_cycles();
         }
 
-        public
-        function handleSignal($signo)
+        public function handleSignal($signo)
         {
             if ($signo === SIGTERM or $signo === SIGINT or $signo === SIGHUP) {
                 $this->shutdown();
             }
         }
 
-        public
-        function exceptionHandler(\Throwable $e, $trace = null)
+        public function exceptionHandler(\Throwable $e, $trace = null)
         {
             if ($e === null) {
                 return;
@@ -2551,8 +2537,7 @@ class Server
             $this->crashDump();
         }
 
-        public
-        function crashDump()
+        public function crashDump()
         {
             if ($this->isRunning === false) {
                 return;
@@ -2614,14 +2599,12 @@ class Server
             exit(1);
         }
 
-        public
-        function __debugInfo()
+        public function __debugInfo()
         {
             return [];
         }
 
-        private
-        function tickProcessor()
+        private function tickProcessor()
         {
             $this->nextTick = microtime(true);
             while ($this->isRunning) {
@@ -2633,8 +2616,7 @@ class Server
             }
         }
 
-        public
-        function onPlayerLogin(Player $player)
+        public function onPlayerLogin(Player $player)
         {
             if ($this->sendUsageTicker > 0) {
                 $this->uniquePlayers[$player->getRawUniqueId()] = $player->getRawUniqueId();
@@ -2644,23 +2626,20 @@ class Server
             $player->dataPacket($this->craftingManager->getCraftingDataPacket());
         }
 
-        public
-        function addPlayer($identifier, Player $player)
+        public function addPlayer($identifier, Player $player)
         {
             $this->players[$identifier] = $player;
             $this->identifiers[spl_object_hash($player)] = $identifier;
         }
 
-        public
-        function addOnlinePlayer(Player $player)
+        public function addOnlinePlayer(Player $player)
         {
             $this->playerList[$player->getRawUniqueId()] = $player;
 
             $this->updatePlayerListData($player->getUniqueId(), $player->getId(), $player->getDisplayName(), $player->getSkinId(), $player->getSkinData());
         }
 
-        public
-        function removeOnlinePlayer(Player $player)
+        public function removeOnlinePlayer(Player $player)
         {
             if (isset($this->playerList[$player->getRawUniqueId()])) {
                 unset($this->playerList[$player->getRawUniqueId()]);
@@ -2672,8 +2651,7 @@ class Server
             }
         }
 
-        public
-        function updatePlayerListData(UUID $uuid, $entityId, $name, $skinId, $skinData, array $players = null)
+        public function updatePlayerListData(UUID $uuid, $entityId, $name, $skinId, $skinData, array $players = null)
         {
             $pk = new PlayerListPacket();
             $pk->type = PlayerListPacket::TYPE_ADD;
@@ -2681,8 +2659,7 @@ class Server
             $this->broadcastPacket($players === null ? $this->playerList : $players, $pk);
         }
 
-        public
-        function removePlayerListData(UUID $uuid, array $players = null)
+        public function removePlayerListData(UUID $uuid, array $players = null)
         {
             $pk = new PlayerListPacket();
             $pk->type = PlayerListPacket::TYPE_REMOVE;
@@ -2690,8 +2667,7 @@ class Server
             $this->broadcastPacket($players === null ? $this->playerList : $players, $pk);
         }
 
-        public
-        function sendFullPlayerListData(Player $p)
+        public function sendFullPlayerListData(Player $p)
         {
             $pk = new PlayerListPacket();
             $pk->type = PlayerListPacket::TYPE_ADD;
@@ -2705,8 +2681,7 @@ class Server
             $p->dataPacket($pk);
         }
 
-        private
-        function checkTickUpdates($currentTick, $tickTime)
+        private function checkTickUpdates($currentTick, $tickTime)
         {
             foreach ($this->players as $p) {
                 if (!$p->loggedIn and ($tickTime - $p->creationTime) >= 10) {
@@ -2754,8 +2729,7 @@ class Server
             }
         }
 
-        public
-        function doAutoSave()
+        public function doAutoSave()
         {
             if ($this->getAutoSave()) {
                 Timings::$worldSaveTimer->startTiming();
@@ -2773,10 +2747,8 @@ class Server
                 Timings::$worldSaveTimer->stopTiming();
             }
         }
-    }
 
-        public
-        function sendUsage($type = SendUsageTask::TYPE_STATUS)
+        public function sendUsage($type = SendUsageTask::TYPE_STATUS)
         {
             $this->scheduler->scheduleAsyncTask(new SendUsageTask($this, $type, $this->uniquePlayers));
             $this->uniquePlayers = [];
@@ -2786,8 +2758,7 @@ class Server
         /**
          * @return BaseLang
          */
-        public
-        function getLanguage()
+        public function getLanguage()
         {
             return $this->baseLang;
         }
@@ -2795,8 +2766,7 @@ class Server
         /**
          * @return bool
          */
-        public
-        function isLanguageForced()
+        public function isLanguageForced()
         {
             return $this->forceLanguage;
         }
@@ -2804,8 +2774,7 @@ class Server
         /**
          * @return Network
          */
-        public
-        function getNetwork()
+        public function getNetwork()
         {
             return $this->network;
         }
@@ -2813,14 +2782,12 @@ class Server
         /**
          * @return MemoryManager
          */
-        public
-        function getMemoryManager()
+        public function getMemoryManager()
         {
             return $this->memoryManager;
         }
 
-        private
-        function titleTick()
+        private function titleTick()
         {
             if (!Terminal::hasFormattingCodes()) {
                 return;
@@ -2849,8 +2816,7 @@ class Server
          *
          * TODO: move this to Network
          */
-        public
-        function handlePacket($address, $port, $payload)
+        public function handlePacket($address, $port, $payload)
         {
             try {
                 if (strlen($payload) > 2 and substr($payload, 0, 2) === "\xfe\xfd" and $this->queryHandler instanceof QueryHandler) {
@@ -2874,8 +2840,7 @@ class Server
          * @param Config|null $cfg
          * @return bool|mixed|null
          */
-        public
-        function getAdvancedProperty($variable, $defaultValue = null, Config $cfg = null)
+        public function getAdvancedProperty($variable, $defaultValue = null, Config $cfg = null)
         {
             $vars = explode(".", $variable);
             $base = array_shift($vars);
@@ -2898,8 +2863,7 @@ class Server
             return $base;
         }
 
-        public
-        function updateQuery()
+        public function updateQuery()
         {
             try {
                 $this->getPluginManager()->callEvent($this->queryRegenerateTask = new QueryRegenerateEvent($this, 5));
@@ -2915,8 +2879,7 @@ class Server
         /**
          * Tries to execute a server tick
          */
-        private
-        function tick()
+        private function tick()
         {
             $tickTime = microtime(true);
             if (($tickTime - $this->nextTick) < -0.025) { //Allow half a tick of diff
