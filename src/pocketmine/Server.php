@@ -2005,9 +2005,8 @@ class Server
                     return "true";
                 }
         }
-
-        public
-        function checkAuthentication()
+	}
+        public function checkAuthentication()
         {
             if ($this->isExtensionInstalled("OpenSSL") == "false") {
                 return "offline mode/insecure";
