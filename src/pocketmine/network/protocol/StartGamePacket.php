@@ -25,6 +25,7 @@ namespace pocketmine\network\protocol;
 
 
 class StartGamePacket extends DataPacket{
+
 	const NETWORK_ID = Info::START_GAME_PACKET;
 
 	public $entityUniqueId;
@@ -56,8 +57,8 @@ class StartGamePacket extends DataPacket{
 
 	public function encode(){
 		$this->reset();
-		$this->putVarInt($this->entityUniqueId); //EntityUniqueID
-		$this->putVarInt($this->entityRuntimeId); //EntityRuntimeID
+		$this->putEntityId($this->entityUniqueId); //EntityUniqueID
+		$this->putEntityId($this->entityRuntimeId); //EntityRuntimeID
 		$this->putVector3f($this->x, $this->y, $this->z);
 		$this->putLFloat(0); //TODO: find out what these are (yaw/pitch?)
 		$this->putLFloat(0);
@@ -76,6 +77,13 @@ class StartGamePacket extends DataPacket{
 		$this->putBool($this->isTexturePacksRequired);
 		$this->putString($this->unknown);
 		$this->putString($this->worldName);
+	}
+
+	/**
+	 * @return PacketName
+	 */
+	public function getName(){
+		return "StartGamePacket";
 	}
 
 }

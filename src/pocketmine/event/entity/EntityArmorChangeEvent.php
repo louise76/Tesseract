@@ -56,5 +56,11 @@ class EntityArmorChangeEvent extends EntityEvent implements Cancellable{
 		return $this->oldItem;
 	}
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "EntityArmorChangeEvent";
+	}
 
 }

@@ -61,4 +61,11 @@ class EntityDeathEvent extends EntityEvent{
 		$this->drops = $drops;
 	}
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "EntityDeathEvent";
+	}
+
 }

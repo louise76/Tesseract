@@ -24,9 +24,8 @@
  */
 namespace pocketmine\nbt;
 
-use pocketmine\item\Item;
-use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\ByteArrayTag;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\EndTag;
@@ -39,8 +38,6 @@ use pocketmine\nbt\tag\NamedTAG;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\nbt\tag\Tag;
-use pocketmine\utils\Utils;
-
 #ifndef COMPILE
 use pocketmine\utils\Binary;
 
@@ -73,49 +70,6 @@ class NBT{
 	private $offset;
 	public $endianness;
 	private $data;
-
-
-	/**
-	 * @param Item $item
-	 * @param int  $slot
-	 * @return CompoundTag
-	 */
-	public static function putItemHelper(Item $item, $slot = null){
-		$tag = new CompoundTag(null, [
-			"id" => new ShortTag("id", $item->getId()),
-			"Count" => new ByteTag("Count", $item->getCount()),
-			"Damage" => new ShortTag("Damage", $item->getDamage())
-		]);
-
-		if($slot !== null){
-			$tag->Slot = new ByteTag("Slot", (int) $slot);
-		}
-
-		if($item->hasCompoundTag()){
-			$tag->tag = clone $item->getNamedTag();
-			$tag->tag->setName("tag");
-		}
-
-		return $tag;
-	}
-
-	/**
-	 * @param CompoundTag $tag
-	 * @return Item
-	 */
-	public static function getItemHelper(CompoundTag $tag){
-		if(!isset($tag->id) or !isset($tag->Count)){
-			return Item::get(0);
-		}
-
-		$item = Item::get($tag->id->getValue(), !isset($tag->Damage) ? 0 : $tag->Damage->getValue(), $tag->Count->getValue());
-		
-		if(isset($tag->tag) and $tag->tag instanceof CompoundTag){
-			$item->setNamedTag($tag->tag);
-		}
-
-		return $item;
-	}
 
 	public static function matchList(ListTag $tag1, ListTag $tag2){
 		if($tag1->getName() !== $tag2->getName() or $tag1->getCount() !== $tag2->getCount()){
@@ -492,6 +446,8 @@ class NBT{
 
 
 	/**
+	 * @param bool $network
+	 *
 	 * @return string|bool
 	 */
 	public function write(bool $network = false){
@@ -652,13 +608,13 @@ class NBT{
 	}
 
 	public function getString(bool $network = false){
-		$len = $network ? $this->getByte() : $this->getShort();
+		$len = $network ? Binary::readUnsignedVarInt($this) : $this->getShort();
 		return $this->get($len);
 	}
 
 	public function putString($v, bool $network = false){
 		if($network === true){
-			$this->putByte(strlen($v));
+			$this->put(Binary::writeUnsignedVarInt(strlen($v)));
 		}else{
 			$this->putShort(strlen($v));
 		}
@@ -668,7 +624,6 @@ class NBT{
 	public function getArray(){
 		$data = [];
 		self::toArray($data, $this->data);
-		return $data;
 	}
 
 	private static function toArray(array &$data, Tag $tag){

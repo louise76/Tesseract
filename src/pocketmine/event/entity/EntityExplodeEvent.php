@@ -91,4 +91,11 @@ class EntityExplodeEvent extends EntityEvent implements Cancellable{
 		$this->yield = $yield;
 	}
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "EntityExplodeEvent";
+	}
+
 }

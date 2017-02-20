@@ -12,7 +12,7 @@
 
 #Phiên bản file cài đặt
 config:
- version: 25
+ version: 28
 
 level:
  #Chỉnh nếu muốn bật/tắt thời tiết (true/false)
@@ -27,6 +27,9 @@ level:
  #Bật/tắt nếu muốn lửa lan (true/false)
  fire-spread: false
  
+network:
+ raklib-disable: false
+ 
 player:
  #Bật/tắt nếu muốn thêm chế độ đói (true/false)
  hunger: true
@@ -40,6 +43,8 @@ player:
  keep-experience: false
  #Nếu người chơi vào game bị crash, đặt nó là 10. Hủy chế độ=-1
  chunk-radius: -1
+ 
+ check-movement: true
 
 nether:
  #Bật/tắt nếu muốn thêm địa ngục vào server, khi bật server hệ thống sẽ tự tạo thế giới địa ngục (true/false)
@@ -63,8 +68,6 @@ server:
  logout-msg: "§3@player left the game"
  #Bật/tắt nếu kích hoạt chế độ sáng tạo giới hạn (Không thể rớt đồ, mở rương và hơn thế nữa) (mặc định: false) (true/false)
  limited-creative: true
- #Bật/tắt nếu muốn kích hoạt DestroyBlockParticle (phá block tự nhiên) (true/false)
- destroy-block-particle: true
  #Bật/tắt nếu muốn thêm chai ném (true/false)
  allow-splash-potion: true
  #Bật/tắt nếu muốn thêm Lệnh Nâng Cao (mặc định: false) (true/false)

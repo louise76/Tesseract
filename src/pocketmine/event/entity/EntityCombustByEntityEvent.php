@@ -45,4 +45,11 @@ class EntityCombustByEntityEvent extends EntityCombustEvent{
 		return $this->combuster;
 	}
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "EntityCombustByEntityEvent";
+	}
+
 }

@@ -12,7 +12,7 @@
 
 #配置文件版本
 config:
- version: 25
+ version: 28
  
 level:
  #设置是否变换天气
@@ -26,6 +26,9 @@ level:
  lightning-fire: false
  #是否启用火焰蔓延
  fire-spread: false
+  
+network:
+ raklib-disable: false
  
 player:
  #是否打开饥饿
@@ -40,6 +43,8 @@ player:
  keep-experience: false
  #如果玩家进入游戏时崩溃, 请设置低于10的值. 禁用 = -1
  chunk-radius: -1
+ 
+ check-movement: true
  
 nether:
  #是否允许地狱，打开此选项会自动生成地狱地图
@@ -62,8 +67,6 @@ server:
  logout-msg: "§3@player 退出了游戏"
  #是否限制创造某些功能(禁止丢物品, 禁止操作箱子等等)
  limited-creative: true
- #是否开启方块破坏粒子
- destroy-block-particle: true
  #是否允许喷溅型药水
  allow-splash-potion: true
  #是否启用高级指令选择器

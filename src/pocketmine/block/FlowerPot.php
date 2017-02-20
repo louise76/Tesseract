@@ -1,11 +1,4 @@
 <?php
-/*
- * Copied from ImagicalMine
- * THIS IS COPIED FROM THE PLUGIN FlowerPot MADE BY @beito123!!
- * https://github.com/beito123/PocketMine-MP-Plugins/blob/master/test%2FFlowerPot%2Fsrc%2Fbeito%2FFlowerPot%2Fomake%2FSkull.php
- *
- * Genisys Project
- */
 
 namespace pocketmine\block;
 
@@ -36,7 +29,7 @@ class FlowerPot extends Flowable{
 		return "Flower Pot Block";
 	}
 
-	public function getBoundingBox(){
+	protected function recalculateBoundingBox(){
 		return new AxisAlignedBB(
 			$this->x + 0.3125,
 			$this->y,
@@ -74,8 +67,9 @@ class FlowerPot extends Flowable{
 	public function onActivate(Item $item, Player $player = null){
 		$tile = $this->getLevel()->getTile($this);
 		if($tile instanceof FlowerPotTile){
-			if($tile->getFlowerPotItem() === Item::AIR){
+			if($tile->getItem() === Item::AIR){
 				switch($item->getId()){
+					/** @noinspection PhpMissingBreakStatementInspection */
 					case Item::TALL_GRASS:
 						if($item->getDamage() === 1){
 							break;
@@ -87,7 +81,7 @@ class FlowerPot extends Flowable{
 					case Item::BROWN_MUSHROOM:
 					case Item::RED_MUSHROOM:
 					case Item::CACTUS:
-						$tile->setFlowerPotData($item->getId(), $item->getDamage());
+						$tile->setItem($item);
 						$this->setDamage($item->getId());
 						$this->getLevel()->setBlock($this, $this, true, false);
 						if($player->isSurvival()){
@@ -112,12 +106,12 @@ class FlowerPot extends Flowable{
 		return false;
 	}
 
-	public function getDrops(Item $item) : array {
-		$items = array([Item::FLOWER_POT, 0, 1]);
-		/** @var FlowerPotTile $tile */
-		if($this->getLevel()!=null && (($tile = $this->getLevel()->getTile($this)) instanceof FlowerPotTile)){
-			if($tile->getFlowerPotItem() !== Item::AIR){
-				$items[] = array($tile->getFlowerPotItem(), $tile->getFlowerPotData(), 1);
+	public function getDrops(Item $item) : array{
+		$items = [[Item::FLOWER_POT, 0, 1]];
+		$tile = $this->getLevel()->getTile($this);
+		if($tile instanceof FlowerPotTile){
+			if(($item = $tile->getItem())->getId() !== Item::AIR){
+				$items[] = [$item->getId(), $item->getDamage(), 1];
 			}
 		}
 		return $items;

@@ -72,9 +72,9 @@ namespace pocketmine {
 	use pocketmine\utils\Utils;
 	use pocketmine\wizard\Installer;
 
-	const VERSION = ""; //will be set by CI to a git hash
-	const API_VERSION = "2.1.0";
-	const CODENAME = "Crystal";
+	const VERSION = "1.1.0";
+	const API_VERSION = "3.0.0";
+	const CODENAME = "Ruby";
 
 	/*
 	 * Startup code. Do not look at it, it may harm you.
@@ -113,7 +113,7 @@ namespace pocketmine {
 	$autoloader->register(true);
 
 
-	set_time_limit(0); //Who set it to 30 seconds?!?!
+	set_time_limit(0);
 
 	gc_enable();
 	error_reporting(-1);
@@ -466,7 +466,7 @@ namespace pocketmine {
 	}
 
 	ThreadManager::init();
-	$server = new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH, $lang);
+	new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH, $lang);
 
 	$logger->info("Stopping other threads");
 
@@ -478,7 +478,11 @@ namespace pocketmine {
 	$logger->shutdown();
 	$logger->join();
 
-	echo "Server has stopped" . Terminal::$FORMAT_RESET . "\n";
+	//echo "Server has stopped" . Terminal::$FORMAT_RESET . "\n";
+
+	$logger->info(Utils::getThreadCount() . " threads has stopped");//add threads count
+
+	$logger->info("Server has stopped");
 
 	exit(0);
 

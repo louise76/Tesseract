@@ -24,9 +24,9 @@ namespace pocketmine\network\protocol;
 #include <rules/DataPacket.h>
 
 class LevelSoundEventPacket extends DataPacket{
+
 	const NETWORK_ID = Info::LEVEL_SOUND_EVENT_PACKET;
-	
-	//Thanks to PMMP
+
 	const SOUND_ITEM_USE_ON = 0;
 	const SOUND_HIT = 1;
 	const SOUND_STEP = 2;
@@ -124,15 +124,15 @@ class LevelSoundEventPacket extends DataPacket{
 	public $x;
 	public $y;
 	public $z;
-	public $volume;
-	public $pitch;
-	public $unknownBool;
-	public $unknownBool2;
+	public $extraData = -1;
+	public $pitch = 1;
+	public $unknownBool = false;
+	public $unknownBool2 = false;
 
 	public function decode(){
 		$this->sound = $this->getByte();
 		$this->getVector3f($this->x, $this->y, $this->z);
-		$this->volume = $this->getVarInt();
+		$this->extraData = $this->getVarInt();
 		$this->pitch = $this->getVarInt();
 		$this->unknownBool = $this->getBool();
 		$this->unknownBool2 = $this->getBool();
@@ -142,9 +142,17 @@ class LevelSoundEventPacket extends DataPacket{
 		$this->reset();
 		$this->putByte($this->sound);
 		$this->putVector3f($this->x, $this->y, $this->z);
-		$this->putVarInt($this->volume);
+		$this->putVarInt($this->extraData);
 		$this->putVarInt($this->pitch);
 		$this->putBool($this->unknownBool);
 		$this->putBool($this->unknownBool2);
 	}
+
+	/**
+	 * @return PacketName
+	 */
+	public function getName(){
+		return "LevelSoundEventPacket";
+	}
+
 }

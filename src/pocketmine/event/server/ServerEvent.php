@@ -28,4 +28,11 @@ use pocketmine\event\Event;
 
 abstract class ServerEvent extends Event{
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "ServerEvent";
+	}
+
 }

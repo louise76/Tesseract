@@ -12,7 +12,7 @@
 
 #Version 파일의 버전
 config:
- version: 25
+ version: 28
 
 level:
  #날씨 시스템을 켜는 경우 설정하세요
@@ -27,6 +27,9 @@ level:
  #불이 번지는 것을 활성화 하려는 경우 설정하세요
  fire-spread: false
  
+network:
+ raklib-disable: false
+ 
 player:
  #배고픔 시스템 스위치
  hunger: true
@@ -40,6 +43,8 @@ player:
  keep-experience: false
  #플레이어들이 참여했을때 크래시가 발생하는 경우, 이 값을 10 이하로 설정하세요. 비활성화=-1
  chunk-radius: -1
+ 
+ check-movement: true
 
 nether:
  #지옥이 허용된 경우 고르세요. 지옥 레벨이 자동으로 생성됩니다.
@@ -63,8 +68,6 @@ server:
  logout-msg: "§3@player님이 게임을 떠났습니다"
  #제한된 크리에이티브를 활성화 하는 경우 설정하세요 (아이템 드롭 불가, 상자 열기 불가 등)
  limited-creative: true
- #블럭 파괴 파티클을 추가하는 경우 설정하세요
- destroy-block-particle: true
  #투척용 포션을 활성화 하는 경우 고르세요
  allow-splash-potion: true
  #고급 명령어 선택기를 활성화 하는 경우 설정하세요

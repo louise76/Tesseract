@@ -24,11 +24,12 @@ namespace pocketmine\network\protocol;
 #include <rules/DataPacket.h>
 
 #ifndef COMPILE
-use pocketmine\utils\Binary;
+use pocketmine\entity\Attribute;
 
 #endif
 
 class AddEntityPacket extends DataPacket{
+
 	const NETWORK_ID = Info::ADD_ENTITY_PACKET;
 
 	public $eid;
@@ -41,7 +42,7 @@ class AddEntityPacket extends DataPacket{
 	public $speedZ;
 	public $yaw;
 	public $pitch;
-	public $modifiers;
+	public $attributes = [];
 	public $metadata = [];
 	public $links = [];
 
@@ -56,17 +57,29 @@ class AddEntityPacket extends DataPacket{
 		$this->putUnsignedVarInt($this->type);
 		$this->putVector3f($this->x, $this->y, $this->z);
 		$this->putVector3f($this->speedX, $this->speedY, $this->speedZ);
-		$this->putLFloat($this->pitch * 0.71111);
-		$this->putLFloat($this->yaw * 0.71111);
-		$this->putUnsignedVarInt($this->modifiers); //attributes?
-		$meta = Binary::writeMetadata($this->metadata);
-		$this->put($meta);
+		$this->putLFloat($this->pitch * (256 / 360));
+		$this->putLFloat($this->yaw * (256 / 360));
+		$this->putUnsignedVarInt(count($this->attributes));
+		foreach($this->attributes as $entry){
+			$this->putString($entry->getName());
+			$this->putLFloat($entry->getMinValue());
+			$this->putLFloat($entry->getValue());
+			$this->putLFloat($entry->getMaxValue());
+		}
+		$this->putEntityMetadata($this->metadata);
 		$this->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
 			$this->putEntityId($link[0]);
 			$this->putEntityId($link[1]);
 			$this->putByte($link[2]);
 		}
+	}
+
+	/**
+	 * @return AddEntityPacket
+	 */
+	public function getName(){
+		return "AddEntityPacket";
 	}
 
 }

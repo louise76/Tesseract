@@ -27,7 +27,6 @@ namespace pocketmine\network\query;
 
 use pocketmine\Server;
 use pocketmine\utils\Binary;
-use pocketmine\utils\Utils;
 
 class QueryHandler{
 	private $server, $lastToken, $token, $longData, $shortData, $timeout;
@@ -40,7 +39,7 @@ class QueryHandler{
 		$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.server.query.start"));
 		$addr = ($ip = $this->server->getIp()) != "" ? $ip : "0.0.0.0";
 		$port = $this->server->getPort();
-		$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.server.query.info", [$port]));
+		//$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.server.query.info", [$port]));
 		/*
 		The Query protocol is built on top of the existing Minecraft PE UDP network stack.
 		Because the 0xFE packet does not exist in the MCPE protocol,

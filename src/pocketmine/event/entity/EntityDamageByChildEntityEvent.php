@@ -48,5 +48,11 @@ class EntityDamageByChildEntityEvent extends EntityDamageByEntityEvent{
 		return $this->childEntity;
 	}
 
+	/**
+	 * @return EventName
+	 */
+	public function getName(){
+		return "EntityDamageByChildEntityEvent";
+	}
 
 }

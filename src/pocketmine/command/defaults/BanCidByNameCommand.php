@@ -25,7 +25,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
-use pocketmine\utils\TextFormat;
 
 class BanCidByNameCommand extends VanillaCommand{
 
@@ -33,7 +32,7 @@ class BanCidByNameCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.bancidbyname.description",
-			"%commands.bancidbyname.usage"
+			"%pocketmine.command.bancidbyname.usage"
 		);
 		$this->setPermission("pocketmine.command.bancidbyname");
 	}

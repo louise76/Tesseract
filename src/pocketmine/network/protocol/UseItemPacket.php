@@ -25,13 +25,14 @@ namespace pocketmine\network\protocol;
 
 
 class UseItemPacket extends DataPacket{
+
 	const NETWORK_ID = Info::USE_ITEM_PACKET;
 
 	public $x;
 	public $y;
 	public $z;
+	public $blockId;
 	public $face;
-	public $unknown;
 	public $item;
 	public $fx;
 	public $fy;
@@ -43,7 +44,7 @@ class UseItemPacket extends DataPacket{
 
 	public function decode(){
 		$this->getBlockCoords($this->x, $this->y, $this->z);
-		$this->unknown = $this->getUnsignedVarInt();
+		$this->blockId = $this->getUnsignedVarInt();
 		$this->face = $this->getVarInt();
 		$this->getVector3f($this->fx, $this->fy, $this->fz);
 		$this->getVector3f($this->posX, $this->posY, $this->posZ);
@@ -53,6 +54,13 @@ class UseItemPacket extends DataPacket{
 
 	public function encode(){
 
+	}
+
+	/**
+	 * @return PacketName
+	 */
+	public function getName(){
+		return "UseItemPacket";
 	}
 
 }
