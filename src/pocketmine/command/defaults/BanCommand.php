@@ -1,6 +1,23 @@
 <?php
 
-
+/*
+ *
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
+ *
+ *
+*/
 
 namespace pocketmine\command\defaults;
 
@@ -37,13 +54,13 @@ class BanCommand extends VanillaCommand{
 			$reason = $args[0];
 			if($args[1] != null and is_numeric($args[1])){
 				$until = new \DateTime('@' . ($args[1] * 86400 + time()));
+				$sender->getServer()->getNameBans()->addBan($name, $reason, $until, $sender->getName());
 			}else{
 				$until = null;
-			}
-
-			$sender->getServer()->getNameBans()->addBan($name, $reason, $until, $sender->getName());
-		}else{
-			$sender->getServer()->getNameBans()->addBan($name, $reason = implode(" ", $args), null, $sender->getName());
+				$sender->getServer()->getNameBans()->addBan($name, $reason = implode(" ", $args), $until, $sender->getName());
+			}	
+		} else {
+			$sender->getServer()->getNameBans()->addBan($name);
 		}
 
 
