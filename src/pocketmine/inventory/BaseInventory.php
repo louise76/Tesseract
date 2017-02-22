@@ -1,6 +1,22 @@
 <?php
-
-
+/*
+ *
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
+ *
+ *
+*/
 
 namespace pocketmine\inventory;
 
@@ -147,7 +163,7 @@ abstract class BaseInventory implements Inventory{
 	public function contains(Item $item){
 		$count = max(1, $item->getCount());
 		$checkDamage = !$item->hasAnyDamageValue();
-		$checkTags = $item->getCompoundTag();
+		$checkTags = $item->hasCompoundTag();
 		foreach($this->getContents() as $i){
 			if($item->equals($i, $checkDamage, $checkTags)){
 				$count -= $i->getCount();
@@ -170,8 +186,8 @@ abstract class BaseInventory implements Inventory{
 
 	public function all(Item $item){
 		$slots = [];
-		$checkDamage = !$item->hasAnyDamageValue() ;
-		$checkTags = $item->getCompoundTag();
+		$checkDamage = !$item->hasAnyDamageValue();
+		$checkTags = $item->hasCompoundTag();
 		foreach($this->getContents() as $index => $i){
 			if($item->equals($i, $checkDamage, $checkTags)){
 				$slots[$index] = $i;
@@ -182,8 +198,8 @@ abstract class BaseInventory implements Inventory{
 	}
 
 	public function remove(Item $item, $send = true){
-		$checkDamage = !$item->hasAnyDamageValue() ;
-		$checkTags = $item->getCompoundTag();
+		$checkDamage = !$item->hasAnyDamageValue();
+		$checkTags = $item->hasCompoundTag();
 		$checkCount = $item->getCount() === null ? false : true;
 
 		foreach($this->getContents() as $index => $i){
@@ -197,7 +213,7 @@ abstract class BaseInventory implements Inventory{
 	public function first(Item $item){
 		$count = max(1, $item->getCount());
 		$checkDamage = !$item->hasAnyDamageValue();
-		$checkTags = $item->getCompoundTag();
+		$checkTags = $item->hasCompoundTag();
 
 		foreach($this->getContents() as $index => $i){
 			if($item->equals($i, $checkDamage, $checkTags) and $i->getCount() >= $count){
@@ -229,8 +245,8 @@ abstract class BaseInventory implements Inventory{
 
 	public function canAddItem(Item $item){
 		$item = clone $item;
-		$checkDamage = $item->hasAnyDamageValue() ;
-		$checkTags = $item->getCompoundTag();
+		$checkDamage = !$item->hasAnyDamageValue();
+		$checkTags = $item->hasCompoundTag();
 		for($i = 0; $i < $this->getSize(); ++$i){
 			$slot = $this->getItem($i);
 			if($item->equals($slot, $checkDamage, $checkTags)){
@@ -329,7 +345,7 @@ abstract class BaseInventory implements Inventory{
 			}
 
 			foreach($itemSlots as $index => $slot){
-				if($slot->equals($item, $slot->hasAnyDamageValue(), $slot->getCompoundTag())){
+				if($slot->equals($item, !$slot->hasAnyDamageValue(), $slot->hasCompoundTag())){
 					$amount = min($item->getCount(), $slot->getCount());
 					$slot->setCount($slot->getCount() - $amount);
 					$item->setCount($item->getCount() - $amount);

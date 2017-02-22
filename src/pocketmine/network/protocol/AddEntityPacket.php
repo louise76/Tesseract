@@ -1,13 +1,30 @@
 <?php
 
-
+/*
+ *
+ *  ____            _        _   __  __ _                  __  __ ____  
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
+ * 
+ *
+*/
 
 namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
 
 #ifndef COMPILE
-use pocketmine\utils\Binary;
+use pocketmine\entity\Attribute;
 
 #endif
 
@@ -25,7 +42,7 @@ class AddEntityPacket extends DataPacket{
 	public $speedZ;
 	public $yaw;
 	public $pitch;
-	public $modifiers;
+	public $attributes = [];
 	public $metadata = [];
 	public $links = [];
 
@@ -42,9 +59,14 @@ class AddEntityPacket extends DataPacket{
 		$this->putVector3f($this->speedX, $this->speedY, $this->speedZ);
 		$this->putLFloat($this->pitch * (256 / 360));
 		$this->putLFloat($this->yaw * (256 / 360));
-		$this->putUnsignedVarInt($this->modifiers); //attributes?
-		$meta = Binary::writeMetadata($this->metadata);
-		$this->put($meta);
+		$this->putUnsignedVarInt(count($this->attributes));
+		foreach($this->attributes as $entry){
+			$this->putString($entry->getName());
+			$this->putLFloat($entry->getMinValue());
+			$this->putLFloat($entry->getValue());
+			$this->putLFloat($entry->getMaxValue());
+		}
+		$this->putEntityMetadata($this->metadata);
 		$this->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
 			$this->putEntityId($link[0]);
@@ -54,7 +76,7 @@ class AddEntityPacket extends DataPacket{
 	}
 
 	/**
-	 * @return PacketName
+	 * @return AddEntityPacket
 	 */
 	public function getName(){
 		return "AddEntityPacket";

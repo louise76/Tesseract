@@ -1,6 +1,23 @@
 <?php
 
-
+/*
+ *
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
+ *
+ *
+*/
 
 namespace pocketmine;
 
@@ -70,7 +87,6 @@ use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginLoadOrder;
 use pocketmine\plugin\PluginManager;
 use pocketmine\plugin\ScriptPluginLoader;
-use pocketmine\scheduler\CallbackTask;
 use pocketmine\scheduler\DServerTask;
 use pocketmine\scheduler\FileWriteTask;
 use pocketmine\scheduler\SendUsageTask;
@@ -173,12 +189,6 @@ class Server{
 	/** @var int */
 	private $maxPlayers;
 	
-	/** @var int */
-	private $maxUse;
-	
-	/** @var int */
-	private $maxTick;
-
 	/** @var bool */
 	private $autoSave;
 
@@ -278,7 +288,6 @@ class Server{
 	public $keepExperience = false;
 	public $limitedCreative = true;
 	public $chunkRadius = -1;
-	public $destroyBlockParticle = true;
 	public $allowSplashPotion = true;
 	public $fireSpread = false;
 	public $advancedCommandSelector = false;
@@ -669,7 +678,7 @@ class Server{
 	 * @return float
 	 */
 	public function getTicksPerSecond(){
-		return round($this->maxTick, 2);
+		return round($this->currentTPS, 2);
 	}
 
 	/**
@@ -687,7 +696,7 @@ class Server{
 	 * @return float
 	 */
 	public function getTickUsage(){
-		return round($this->maxUse * 100, 2);
+		return round($this->currentUse * 100, 2);
 	}
 
 	/**
@@ -1453,7 +1462,6 @@ class Server{
 		$this->asyncChunkRequest = $this->getAdvancedProperty("server.async-chunk-request", true);
 		$this->limitedCreative = $this->getAdvancedProperty("server.limited-creative", true);
 		$this->chunkRadius = $this->getAdvancedProperty("player.chunk-radius", -1);
-		$this->destroyBlockParticle = $this->getAdvancedProperty("server.destroy-block-particle", true);
 		$this->allowSplashPotion = $this->getAdvancedProperty("server.allow-splash-potion", true);
 		$this->fireSpread = $this->getAdvancedProperty("level.fire-spread", false);
 		$this->advancedCommandSelector = $this->getAdvancedProperty("server.advanced-command-selector", false);
@@ -1465,27 +1473,6 @@ class Server{
 		$this->checkMovement = $this->getAdvancedProperty("anticheat.check-movement", true);
 		$this->allowInstabreak = $this->getAdvancedProperty("anticheat.allow-instabreak", true);
 		$this->antiFly = $this->getAdvancedProperty("anticheat.anti-fly", true);
-	}
-	
-	/**
-	 * @deprecated Use SynapsePM plugin instead
-	 * @return bool
-	 */
-	public function isSynapseEnabled() : bool {
-		return $this->getSynapse() !== null;
-	}
-	
-	/**
-	  * API for checking if PROXY is enabled
-	 */
-	public function isProxyEnabled(){
-		$plugin = null;//$this->pluginManager->getPlugin('WingProxy');
-		
-		if($plugin == null or $plugin->isDisabled()){
-			return 'false';
-	} else {
-	        return 'true';	
-	}
 	}
 	
 	/**
@@ -1575,9 +1562,7 @@ class Server{
 			$mcpe = $this->getVersion();
 			$protocol = Info::CURRENT_PROTOCOL;
 			$api = $this->getApiVersion();
-			$ip = Utils::getIP();
 			$port = "19132";//TODO
-			$proxy = $this->isProxyEnabled();
 			$ssl = $this->isExtensionInstalled("OpenSSL");
 			$mode = $this->checkAuthentication();
 			$lang = $this->getProperty("settings.language", "eng");
@@ -1588,9 +1573,9 @@ class Server{
 §e###################################################  §6-- Loaded: Properties and Configuration --
 §e#                                                 #    §cDate: §d$date
 §e#§b   _______                                _      §e#    §cVersion: §d$version §cCodename: §d$code
-§e#§b  |__   __|                              | |     §e#    §cMCPE: §d$mcpe §c(Protocol: §d$protocol§c)
-§e#§b     | | ___  ___ ___  ___ _ __ __ _  ___| |_    §e#    §cIP: §d$ip §cPort: §d$port
-§e#§b     | |/ _ \/ __/ __|/ _ \ '__/ _` |/ __| __|   §e#    §cProxy Enabled: §d$proxy
+§e#§b  |__   __|                              | |     §e#    §cMCPE: §d$mcpe
+§e#§b     | | ___  ___ ___  ___ _ __ __ _  ___| |_    §e#    §cPort: §d$port
+§e#§b     | |/ _ \/ __/ __|/ _ \ '__/ _` |/ __| __|   §e#    §cProtocol: §d$protocol
 §e#§b     | |  __/\__ \__ \  __/ | | (_| | (__| |_    §e#    §cSSL Extension: §d$ssl
 §e#§b     |_|\___||___/___/\___|_|  \__,_|\___|\__|   §e#    §cAuthentication: §d$mode
 §e#                                                 #  §6------------------------------------------
@@ -1791,6 +1776,10 @@ class Server{
 			Generator::addGenerator(Nether::class, "hell");
 			Generator::addGenerator(Nether::class, "nether");
 			//TODO Generator::addGenerator(Ender::class, "ender");
+			
+			if($this->getProperty("level-settings.default-format", "mcregion")){
+					$this->getLogger()->warning("McRegion is deprecated please refrain from using it!");
+				}
 
 			foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
 				if($this->loadLevel($name) === false){
@@ -1838,18 +1827,20 @@ class Server{
 
 				return;
 			}
+			
+			if($this->netherEnabled){
+				if(!$this->loadLevel($this->netherName)){
+					$this->generateLevel($this->netherName, time(), Generator::getGenerator("nether"));
+				}
+				$this->netherLevel = $this->getLevelByName($this->netherName);
+			}
+
 
 			if($this->getProperty("ticks-per.autosave", 6000) > 0){
 				$this->autoSaveTicks = (int) $this->getProperty("ticks-per.autosave", 6000);
 			}
 
 			$this->enablePlugins(PluginLoadOrder::POSTWORLD);
-
-			if($this->dserverConfig["enable"] and ($this->getAdvancedProperty("dserver.server-list", "") != "")) $this->scheduler->scheduleRepeatingTask(new CallbackTask([
-				$this,
-				"updateDServerInfo"
-			]), $this->dserverConfig["timer"]);
-			
 
 			if($cfgVer > $advVer){
 				$this->logger->notice("Your tesseract.yml needs update (Current : $advVer -> Latest: $cfgVer)");
@@ -1859,19 +1850,6 @@ class Server{
 		}catch(\Throwable $e){
 			$this->exceptionHandler($e);
 		}
-	}
-
-	/**
-	 * @return WingProxy
-	 */
-	 
-	public function getProxy(){
-       if($this->isProxyEnabled() == false){
-		   throw new \InvalidStateException("ERROR: Proxy is not enabled");
-		   
-	   } else {
-	     return $this->pluginManager()->getPlugin("WingProxy");		 
-	   }
 	}
 
 	public function getOnlineMode(){
@@ -1909,18 +1887,6 @@ class Server{
 	   } else {
 		   return "online mode/secure";
 	   }
-	}
-	
-	/**
-	 * @deprecated Use SynapsePM plugin instead
-	 * @return Synapse|null
-	 */
-	public function getSynapse(){
-		$plugin = $this->pluginManager->getPlugin('SynapsePM');
-		if ($plugin === null or $plugin->isDisabled()) {
-			return null;
-		}
-		return $plugin->getSynapse();
 	}
 
 	/**
@@ -2393,37 +2359,6 @@ class Server{
 
 		$this->logger->emergency($this->getLanguage()->translateString("pocketmine.crash.submit", [$dump->getPath()]));
 
-		/*if($this->getProperty("auto-report.enabled", true) !== false){
-			$report = true;
-			$plugin = $dump->getData()["plugin"];
-			if(is_string($plugin)){
-				$p = $this->pluginManager->getPlugin($plugin);
-				if($p instanceof Plugin and !($p->getPluginLoader() instanceof PharPluginLoader)){
-					$report = false;
-				}
-			}elseif(\Phar::running(true) == ""){
-				$report = false;
-			}
-			if($dump->getData()["error"]["type"] === "E_PARSE" or $dump->getData()["error"]["type"] === "E_COMPILE_ERROR"){
-				$report = false;
-			}
-
-			if($report){
-				$reply = Utils::postURL("http://" . $this->getProperty("auto-report.host", "crash.pocketmine.net") . "/submit/api", [
-					"report" => "yes",
-					"name" => $this->getName() . " " . $this->getPocketMineVersion(),
-					"email" => "crash@pocketmine.net",
-					"reportPaste" => base64_encode($dump->getEncodedData())
-				]);
-
-				if(($data = json_decode($reply)) !== false and isset($data->crashId)){
-					$reportId = $data->crashId;
-					$reportUrl = $data->crashUrl;
-					$this->logger->emergency($this->getLanguage()->translateString("pocketmine.crash.archive", [$reportUrl, $reportId]));
-				}
-			}
-		}*/
-
 		//$this->checkMemory();
 		//$dump .= "Memory Usage Tracking: \r\n" . chunk_split(base64_encode(gzdeflate(implode(";", $this->memoryStats), 9))) . "\r\n";
 
@@ -2601,6 +2536,7 @@ class Server{
 	/**
 	 * @return MemoryManager
 	 */
+	
 	public function getMemoryManager(){
 		return $this->memoryManager;
 	}
@@ -2726,8 +2662,8 @@ class Server{
 
 		if(($this->tickCounter & 0b1111) === 0){
 			$this->titleTick();
-			$this->maxTick = 20;
-			$this->maxUse = 0;
+			$this->currentTPS = 20;
+			$this->currentUse = 0;
 
 			if(($this->tickCounter & 0b111111111) === 0){
 				if(($this->dserverConfig["enable"] and $this->dserverConfig["queryTickUpdate"]) or !$this->dserverConfig["enable"]){
@@ -2767,8 +2703,8 @@ class Server{
 		Timings::$serverTickTimer->stopTiming();
 
 		$now = microtime(true);
-		$tick = min(20, 1 / max(0.001, $now - $tickTime));
-		$use = min(1, ($now - $tickTime) / 0.05);
+		$this->currentTPS = min(20, 1 / max(0.001, $now - $tickTime));
+		$this->currentUse = min(1, ($now - $tickTime) / 0.05);
 
 		TimingsHandler::tick($this->currentTPS <= $this->profilingTickRate);
 
