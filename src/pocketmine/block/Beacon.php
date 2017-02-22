@@ -54,6 +54,14 @@ use pocketmine\math\Vector3;
 	public function getLightLevel(){
 		return 15;
 	}
+	
+	public function getResistance() {
+		return 15;
+	}
+	
+	public function getHardness() {
+		return 3;
+	}
  
  	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
  		$this->getLevel()->setBlock($this, $this, true, true);
@@ -102,4 +110,9 @@ use pocketmine\math\Vector3;
  
  		return true;
  	}
+	
+	public function onBreak(Item $item){
+		$this->getLevel()->setBlock($this, new Air(), true, true);
+		return true;
+	}
  }
