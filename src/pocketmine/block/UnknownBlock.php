@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  *
  *  ____            _        _   __  __ _                  __  __ ____
  * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
@@ -14,40 +14,20 @@
  * (at your option) any later version.
  *
  * @author PocketMine Team
- * @link   http://www.pocketmine.net/
+ * @link http://www.pocketmine.net/
  *
  *
- */
+*/
 
-namespace pocketmine\event\entity;
+namespace pocketmine\block;
 
-use pocketmine\entity\Projectile;
-use pocketmine\event\Cancellable;
+class UnknownBlock extends Solid{
 
-class ProjectileLaunchEvent extends EntityEvent implements Cancellable{
+    public function isSolid(){
+        return false;
+    }
 
-	public static $handlerList = null;
-
-	/**
-	 * @param Projectile $entity
-	 */
-	public function __construct(Projectile $entity){
-		$this->entity = $entity;
-
-	}
-
-	/**
-	 * @return Projectile
-	 */
-	public function getEntity(){
-		return $this->entity;
-	}
-
-	/**
-	 * @return EventName|string
-     */
-	public function getName(){
-		return "ProjectileLaunchEvent";
-	}
-
+    public function getHardness(){
+        return 0;
+    }
 }

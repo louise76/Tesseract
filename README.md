@@ -17,10 +17,6 @@ __Travis-CI Build:__<br>
  __Jenkins Build:__<br>
 [![Jenkins](https://travis-ci.org/TesseractTeam/Tesseract.svg?branch=master)](http://jenkins.tesseractteam.tk:8080/job/Tesseract)
 
-## Project List
-You can check the progress of the project.
-__[Project List!](https://github.com/TesseractTeam/Tesseract/projects/2)__
-
 ## Quick Links (Instead of scrolling, click these!)
 
 __[Installation](https://github.com/TesseractTeam/Tesseract/blob/master/README.md#installation)__ <br>
@@ -52,8 +48,7 @@ __[Back to QuickLinks](https://github.com/TesseractTeam/Tesseract/blob/master/RE
 
 ## Acknowledgements
 
-- Tesseract is a "spoon" of **[Genisys](https://github.com/iTXTech/Genisys)** 
-- Tesseract is also a "spoon" of **[Pocketmine-MP](http://github.com/pmmp/PocketMine-MP/)** 
+- Tesseract is a "spoon" of **[Pocketmine-MP](http://github.com/pmmp/PocketMine-MP/)** & **[Genisys](https://github.com/iTXTech/Genisys)**
 - Most of the original code was written by PocketMine Team and iTX Technologies. <br>
 
 __[Back to QuickLinks](https://github.com/TesseractTeam/Tesseract/blob/master/README.md#quick-links-instead-of-scrolling-click-these)__<br>

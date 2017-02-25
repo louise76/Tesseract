@@ -22,6 +22,7 @@
 namespace pocketmine\event\level;
 
 use pocketmine\level\format\Chunk;
+use pocketmine\level\Level;
 
 /**
  * Called when a Chunk is loaded
@@ -32,9 +33,9 @@ class ChunkLoadEvent extends ChunkEvent{
 
 	private $newChunk;
 
-	public function __construct(Chunk $chunk, $newChunk){
-		parent::__construct($chunk);
-		$this->newChunk = (bool) $newChunk;
+	public function __construct(Level $level, Chunk $chunk, bool $newChunk){
+		parent::__construct($level, $chunk);
+		$this->newChunk = $newChunk;
 	}
 
 	/**
@@ -45,8 +46,8 @@ class ChunkLoadEvent extends ChunkEvent{
 	}
 
 	/**
-	 * @return EventName
-	 */
+	 * @return EventName|string
+     */
 	public function getName(){
 		return "ChunkLoadEvent";
 	}

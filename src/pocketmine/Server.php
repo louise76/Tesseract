@@ -273,49 +273,6 @@ class Server
     /** Advanced Config */
     public $advancedConfig = null;
 
-    public $weatherEnabled = true;
-    public $foodEnabled = true;
-    public $expEnabled = true;
-    public $keepInventory = false;
-    public $netherEnabled = false;
-    public $netherName = "nether";
-    public $weatherRandomDurationMin = 6000;
-    public $weatherRandomDurationMax = 12000;
-    public $lightningTime = 200;
-    public $lightningFire = false;
-    public $version;
-    public $playerMsgType = self::PLAYER_MSG_TYPE_MESSAGE;
-    public $playerLoginMsg = "";
-    public $playerLogoutMsg = "";
-    public $autoClearInv = true;
-    public $dserverConfig = [];
-    public $dserverPlayers = 0;
-    public $dserverAllPlayers = 0;
-    public $anvilEnabled = false;
-    public $asyncChunkRequest = true;
-    public $keepExperience = false;
-    public $limitedCreative = true;
-    public $chunkRadius = -1;
-    public $destroyBlockParticle = true;
-    public $allowSplashPotion = true;
-    public $fireSpread = false;
-    public $advancedCommandSelector = false;
-    public $enchantingTableEnabled = true;
-    public $countBookshelf = false;
-    public $allowInventoryCheats = false;
-    public $raklibDisable = false;
-    public $checkMovement = true;
-    public $antiFly = true;
-    public $allowInstabreak = false;
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return "Tesseract";
-    }
-
     /**
      * @return bool
      */
@@ -563,36 +520,6 @@ class Server
         return -1;
     }
 
-    /**
-     * @param string $str
-     *
-     * @return int
-     */
-    public static function getDifficultyFromString($str)
-    {
-        switch (strtolower(trim($str))) {
-            case "0":
-            case "peaceful":
-            case "p":
-                return 0;
-
-            case "1":
-            case "easy":
-            case "e":
-                return 1;
-
-            case "2":
-            case "normal":
-            case "n":
-                return 2;
-
-            case "3":
-            case "hard":
-            case "h":
-                return 3;
-        }
-        return -1;
-    }
 
     /**
      * @return int
@@ -823,8 +750,8 @@ class Server
 			$this->playerMetadata = new PlayerMetadataStore();
 			$this->levelMetadata = new LevelMetadataStore();
 
-			$this->operators = new Config($this->dataPath . "ops.txt", Config::ENUM);
-			$this->whitelist = new Config($this->dataPath . "white-list.txt", Config::ENUM);
+			$this->operators = new Config($this->dataPath . "ops.json", Config::JSON);
+			$this->whitelist = new Config($this->dataPath . "whitelist.json", Config::JSON);
 			if(file_exists($this->dataPath . "banned.txt") and !file_exists($this->dataPath . "banned-players.txt")){
 				@rename($this->dataPath . "banned.txt", $this->dataPath . "banned-players.txt");
 			}

@@ -23,12 +23,13 @@ namespace pocketmine\entity;
 
 use pocketmine\event\player\PlayerFishEvent;
 use pocketmine\level\format\Chunk;
+use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\protocol\EntityEventPacket;
 use pocketmine\network\protocol\AddEntityPacket;
-use pocketmine\Server;
+
 
 class FishingHook extends Projectile{
 	const NETWORK_ID = 77;
@@ -55,8 +56,8 @@ class FishingHook extends Projectile{
 		// $this->setDataProperty(FallingSand::DATA_BLOCK_INFO, self::DATA_TYPE_INT, $this->getData());
 	}
 
-	public function __construct(Chunk $chunk, CompoundTag $nbt, Entity $shootingEntity = null){
-		parent::__construct($chunk, $nbt, $shootingEntity);
+	public function __construct(Level $level, CompoundTag $nbt, Entity $shootingEntity = null){
+		parent::__construct($level, $nbt, $shootingEntity);
 	}
 
 	public function setData($id){

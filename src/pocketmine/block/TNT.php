@@ -22,9 +22,9 @@ namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
-use pocketmine\level\Level;
+
 use pocketmine\level\sound\TNTPrimeSound;
-use pocketmine\math\Vector3;
+
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -57,7 +57,7 @@ class TNT extends Solid {
             $item->useOn($this);
             $this->getLevel()->setBlock($this, new Air(), true);
             $mot = (new Random())->nextSignedFloat() * M_PI * 2;
-            $tnt = Entity::createEntity("PrimedTNT", $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), new CompoundTag("", [
+            $tnt = Entity::createEntity("PrimedTNT", $this->getLevel(), new CompoundTag("", [
                         "Pos" => new ListTag("Pos", [
                                 new DoubleTag("", $this->x + 0.5),
                                 new DoubleTag("", $this->y),

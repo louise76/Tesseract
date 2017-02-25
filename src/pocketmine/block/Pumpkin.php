@@ -62,14 +62,13 @@ class Pumpkin extends Solid{
 		$this->getLevel()->setBlock($block, $this, true, true);
 		if($player != null) {
 			$level = $this->getLevel();
-			if($player->getServer()->allowSnowGolem) {
 				$block0 = $level->getBlock($block->add(0,-1,0));
 				$block1 = $level->getBlock($block->add(0,-2,0));
 				if($block0->getId() == Item::SNOW_BLOCK and $block1->getId() == Item::SNOW_BLOCK) {
 					$level->setBlock($block, new Air());
 					$level->setBlock($block0, new Air());
 					$level->setBlock($block1, new Air());
-					$golem = new SnowGolem($player->getLevel()->getChunk($this->getX() >> 4, $this->getZ() >> 4), new CompoundTag("", [
+					$golem = new SnowGolem($player->getLevel(), new CompoundTag("", [
 						"Pos" => new ListTag("Pos", [
 							new DoubleTag("", $this->x),
 							new DoubleTag("", $this->y),
@@ -87,8 +86,6 @@ class Pumpkin extends Solid{
 					]));
 					$golem->spawnToAll();
 				}
-			}
-			if($player->getServer()->allowIronGolem) {
 				$block0 = $level->getBlock($block->add(0,-1,0));
 				$block1 = $level->getBlock($block->add(0,-2,0));
 				$block2 = $level->getBlock($block->add(-1,-1,0));
@@ -106,7 +103,7 @@ class Pumpkin extends Solid{
 					$level->setBlock($block, new Air());
 					$level->setBlock($block0, new Air());
 					$level->setBlock($block1, new Air());
-					$golem = new IronGolem($player->getLevel()->getChunk($this->getX() >> 4, $this->getZ() >> 4), new CompoundTag("", [
+					$golem = new IronGolem($player->getLevel(), new CompoundTag("", [
 						"Pos" => new ListTag("Pos", [
 							new DoubleTag("", $this->x),
 							new DoubleTag("", $this->y),
@@ -125,7 +122,6 @@ class Pumpkin extends Solid{
 					$golem->spawnToAll();
 				}
 			}
-		}
 
 		return true;
 	}
