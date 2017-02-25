@@ -1,0 +1,34 @@
+version: 2
+
+requirements:
+  signed_off_by:
+    required: false
+    
+group_defaults:
+   approve_by_comment:
+      approve_regex: ^Approved
+      enabled: true
+      reject_regex: ^Rejected
+   reset_on_push:
+      enabled: false
+    
+groups:
+  Owners:
+      
+    required: 2
+      
+    users:
+    - AppleDevelops
+    
+    teams:
+    - owners
+      
+  Software:
+      
+      required: 3
+      
+      users:
+      - AppleDevelops
+      
+      teams:
+      - software

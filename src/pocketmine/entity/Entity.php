@@ -27,7 +27,7 @@ namespace pocketmine\entity;
 use pocketmine\block\Block;
 use pocketmine\block\Fire;
 use pocketmine\block\Portal;
-use pocketmine\block\PressurePlate;
+
 use pocketmine\block\Water;
 use pocketmine\block\SlimeBlock;
 use pocketmine\entity\Item as DroppedItem;
@@ -1615,11 +1615,6 @@ abstract class Entity extends Location implements Metadatable{
 
 		foreach($blocksaround = $this->getBlocksAround() as $block){
 			$block->onEntityCollide($this);
-			if(!$this->isPlayer){
-				if($block instanceof PressurePlate){
-					$this->activatedPressurePlates[Level::blockHash($block->x, $block->y, $block->z)] = $block;
-				}
-			}
 			$block->addVelocityToEntity($this, $vector);
 		}
 
@@ -1833,8 +1828,6 @@ abstract class Entity extends Location implements Metadatable{
 				$this->getLevel()->removeEntity($this);
 			}
 		}
-
-		$this->activatedPressurePlates = [];
 
 		if($this->attributeMap != null){
 			$this->attributeMap = null;
